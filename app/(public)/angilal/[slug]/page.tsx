@@ -5,7 +5,16 @@ import { format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
-import type { News, Category } from "@prisma/client";
+type NewsWithCategory = {
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string | null;
+  createdAt: Date;
+  category: {
+    name: string;
+  };
+};
 
 interface CategoryPageProps {
   params: Promise<{
@@ -20,8 +29,6 @@ async function getCategory(slug: string) {
     where: { slug },
   });
 }
-
-type NewsWithCategory = News & { category: Category };
 
 async function getNewsByCategory(categoryId: string) {
   return await prisma.news.findMany({
@@ -39,7 +46,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const newsList: NewsWithCategory[] = await getNewsByCategory(category.id);
+  const newsList = (await getNewsByCategory(category.id)) as NewsWithCategory[];
 
   return (
     <div className="space-y-8">
