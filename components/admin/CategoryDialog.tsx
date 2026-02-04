@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,7 +22,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Ангилалын нэр оруулна уу"),
@@ -66,7 +64,7 @@ export function CategoryDialog({ category, open, onOpenChange }: CategoryDialogP
       onOpenChange(false);
       form.reset();
       router.refresh();
-    } catch (error) {
+  } catch {
       toast.error("Алдаа гарлаа");
     } finally {
       setIsLoading(false);

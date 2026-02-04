@@ -23,7 +23,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 interface Category {
@@ -62,7 +61,7 @@ export default function CategoryList({ categories }: { categories: Category[] })
 
       toast.success("Ангилал устгагдлаа");
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Алдаа гарлаа");
     } finally {
       setIsDeleteDialogOpen(false);

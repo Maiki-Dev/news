@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -43,27 +43,27 @@ export default async function HomePage() {
   const latestNews: LatestNewsItem[] = await getLatestNews(featuredNews?.id);
 
   return (
-    <div className="space-y-12">
+    <div className="container mx-auto px-4 space-y-12">
       {/* Featured News */}
       {featuredNews && (
         <section>
           <Link href={`/medee/${featuredNews.slug}`}>
-            <div className="relative rounded-xl overflow-hidden aspect-[2/1] md:aspect-[2.5/1] group cursor-pointer">
+            <div className="relative rounded-xl overflow-hidden aspect-[16/9] md:aspect-[2.5/1] group cursor-pointer">
               {featuredNews.coverImage && (
                 <Image
                   src={featuredNews.coverImage}
                   alt={featuredNews.title}
                   fill
-                  className="object-cover transition-transform group-hover:scale-105"
+                  className="object-cover md:transition-transform md:group-hover:scale-105"
                   priority
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-6 md:p-10 text-white w-full md:w-2/3">
+              <div className="absolute bottom-0 left-0 p-4 md:p-10 text-white w-full md:w-2/3">
                 <Badge className="mb-4 bg-blue-600 hover:bg-blue-700">
                   {featuredNews.category.name}
                 </Badge>
-                <h1 className="text-2xl md:text-4xl font-bold leading-tight mb-4 group-hover:text-blue-200 transition-colors">
+                <h1 className="text-xl md:text-4xl font-bold leading-tight mb-3 md:mb-4 md:group-hover:text-blue-200 md:transition-colors">
                   {featuredNews.title}
                 </h1>
                 <div className="flex items-center gap-4 text-sm text-gray-300">
@@ -83,20 +83,20 @@ export default async function HomePage() {
 
       {/* Latest News Grid */}
       <section>
-        <h2 className="text-2xl font-bold mb-6 pl-4 border-l-4 border-blue-600">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 pl-3 md:pl-4 border-l-4 border-blue-600">
           Шинэ мэдээ
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {latestNews.map((news) => (
             <Link key={news.id} href={`/medee/${news.slug}`}>
-              <Card className="h-full hover:shadow-lg transition-shadow group">
-                <div className="relative aspect-video overflow-hidden rounded-t-lg bg-gray-100">
+              <Card className="h-full md:hover:shadow-lg md:transition-shadow group">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-t-lg bg-gray-100">
                   {news.coverImage ? (
                     <Image
                       src={news.coverImage}
                       alt={news.title}
                       fill
-                      className="object-cover transition-transform group-hover:scale-105"
+                      className="object-cover md:transition-transform md:group-hover:scale-105"
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full text-gray-400">
@@ -110,10 +110,10 @@ export default async function HomePage() {
                       {news.category.name}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {format(new Date(news.createdAt), "MM/dd")}
+                      {format(new Date(news.createdAt), "yyyy-MM-dd")}
                     </span>
                   </div>
-                  <h3 className="font-bold line-clamp-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="font-semibold md:font-bold line-clamp-2 md:group-hover:text-blue-600 md:transition-colors">
                     {news.title}
                   </h3>
                 </CardHeader>

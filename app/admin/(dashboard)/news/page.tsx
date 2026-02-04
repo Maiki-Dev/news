@@ -3,6 +3,21 @@ import NewsList from "@/components/admin/NewsList";
 
 export const dynamic = "force-dynamic";
 
+type AdminNewsItem = {
+  id: string;
+  title: string;
+  slug: string;
+  published: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  category: {
+    name: string;
+  };
+  author: {
+    name: string | null;
+  };
+};
+
 async function getNews() {
   const news = await prisma.news.findMany({
     orderBy: { createdAt: "desc" },
@@ -13,11 +28,11 @@ async function getNews() {
       },
     },
   });
-  return news;
+  return news as AdminNewsItem[];
 }
 
 export default async function NewsPage() {
-  const news = await getNews();
+  const news: AdminNewsItem[] = await getNews();
 
   // Convert Date objects to strings for Client Component
   const formattedNews = news.map((item) => ({

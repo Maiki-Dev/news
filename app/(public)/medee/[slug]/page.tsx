@@ -4,7 +4,6 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader } from "@/components/ui/card";
 import { Metadata } from "next";
 
 interface NewsDetailPageProps {
@@ -86,8 +85,9 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <article className="lg:col-span-2 space-y-8">
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+        <article className="lg:col-span-2 space-y-6 md:space-y-8">
         <div className="space-y-4">
           <Badge className="bg-blue-600 hover:bg-blue-700">
             {news.category.name}
@@ -107,7 +107,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
         </div>
 
         {news.coverImage && (
-          <div className="relative aspect-video rounded-xl overflow-hidden">
+          <div className="relative aspect-[16/9] rounded-xl overflow-hidden">
             <Image
               src={news.coverImage}
               alt={news.title}
@@ -122,29 +122,29 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
           className="prose prose-lg dark:prose-invert max-w-none"
           dangerouslySetInnerHTML={{ __html: news.content }}
         />
-      </article>
+        </article>
 
-      <aside className="space-y-8">
+        <aside className="space-y-6 md:space-y-8">
         <div>
-          <h3 className="text-xl font-bold mb-6 pb-2 border-b">
+            <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6 pb-2 border-b">
             Холбоотой мэдээ
           </h3>
           <div className="flex flex-col gap-6">
             {relatedNews.map((item) => (
               <Link key={item.id} href={`/medee/${item.slug}`} className="group">
                 <div className="flex gap-4">
-                  <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                    <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                     {item.coverImage && (
                       <Image
                         src={item.coverImage}
                         alt={item.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform"
+                          className="object-cover md:group-hover:scale-105 md:transition-transform"
                       />
                     )}
                   </div>
                   <div className="flex flex-col justify-between py-1">
-                    <h4 className="font-semibold line-clamp-3 text-sm group-hover:text-blue-600 transition-colors">
+                      <h4 className="font-semibold line-clamp-3 text-sm md:group-hover:text-blue-600 md:transition-colors">
                       {item.title}
                     </h4>
                     <span className="text-xs text-muted-foreground">
@@ -161,7 +161,8 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             )}
           </div>
         </div>
-      </aside>
+        </aside>
+      </div>
     </div>
   );
 }

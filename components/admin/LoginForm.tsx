@@ -57,7 +57,7 @@ export function LoginForm() {
 
       router.push("/admin");
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
     } finally {
       setIsLoading(false);

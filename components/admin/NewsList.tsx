@@ -56,7 +56,7 @@ export default function NewsList({ news }: { news: News[] }) {
 
       toast.success("Мэдээ устгагдлаа");
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Алдаа гарлаа");
     } finally {
       setIsDeleteDialogOpen(false);

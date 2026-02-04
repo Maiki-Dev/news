@@ -17,15 +17,15 @@ type NewsWithCategory = {
 };
 
 interface CategoryPageProps {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 }
 
 export const revalidate = 60;
 
 async function getCategory(slug: string) {
-  return await prisma.category.findUnique({
+  return await prisma.category.findFirst({
     where: { slug },
   });
 }
@@ -38,8 +38,30 @@ async function getNewsByCategory(categoryId: string) {
   });
 }
 
+export async function generateStaticParams() {
+  const categories = await prisma.category.findMany({
+    select: { slug: true },
+  });
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({ params }: CategoryPageProps) {
+  const { slug } = params;
+  const category = await getCategory(slug);
+  if (!category) {
+    return { title: "Ангилал олдсонгүй" };
+  }
+  return {
+    title: `${category.name} - Ангилал`,
+    description: `${category.name} ангиллын мэдээ`,
+  };
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
+  if (!slug) {
+    notFound();
+  }
   const category = await getCategory(slug);
 
   if (!category) {
@@ -49,23 +71,23 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const newsList = (await getNewsByCategory(category.id)) as NewsWithCategory[];
 
   return (
-    <div className="space-y-8">
+    <div className="container mx-auto px-4 space-y-8">
       <div className="flex items-center justify-between border-b pb-4">
-        <h1 className="text-3xl font-bold">{category.name}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{category.name}</h1>
         <span className="text-muted-foreground">{newsList.length} мэдээ</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {newsList.map((news) => (
           <Link key={news.id} href={`/medee/${news.slug}`}>
-            <Card className="h-full hover:shadow-lg transition-shadow group">
-              <div className="relative aspect-video overflow-hidden rounded-t-lg bg-gray-100">
+            <Card className="h-full md:hover:shadow-lg md:transition-shadow group">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-t-lg bg-gray-100">
                 {news.coverImage ? (
                   <Image
                     src={news.coverImage}
                     alt={news.title}
                     fill
-                    className="object-cover transition-transform group-hover:scale-105"
+                    className="object-cover md:transition-transform md:group-hover:scale-105"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-400">
@@ -82,7 +104,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     {format(new Date(news.createdAt), "yyyy-MM-dd")}
                   </span>
                 </div>
-                <h3 className="font-bold line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="font-semibold md:font-bold line-clamp-2 md:group-hover:text-blue-600 md:transition-colors">
                   {news.title}
                 </h3>
               </CardHeader>

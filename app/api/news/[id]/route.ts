@@ -25,7 +25,7 @@ export async function GET(
     });
     if (!news) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(news);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch news" },
       { status: 500 }
@@ -75,7 +75,7 @@ export async function PUT(
     });
 
     return NextResponse.json(news);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to update news" },
       { status: 500 }
@@ -99,7 +99,7 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to delete news" },
       { status: 500 }
