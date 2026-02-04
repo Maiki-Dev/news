@@ -25,6 +25,14 @@ async function getNews(slug: string) {
   });
 }
 
+type RelatedNewsItem = {
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string | null;
+  createdAt: Date;
+};
+
 async function getRelatedNews(categoryId: string, currentNewsId: string) {
   return await prisma.news.findMany({
     where: {
@@ -72,7 +80,10 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     notFound();
   }
 
-  const relatedNews = await getRelatedNews(news.categoryId, news.id);
+  const relatedNews: RelatedNewsItem[] = await getRelatedNews(
+    news.categoryId,
+    news.id
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
