@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import slugify from "slugify";
-import { Prisma } from "@prisma/client";
 
 const newsSchema = z.object({
   title: z.string().min(1),
@@ -20,7 +19,7 @@ export async function GET(req: Request) {
   const published = searchParams.get("published");
 
   try {
-    const whereClause: Prisma.NewsWhereInput = {};
+    const whereClause: { categoryId?: string; published?: boolean } = {};
     if (categoryId) whereClause.categoryId = categoryId;
     if (published) whereClause.published = published === "true";
 
