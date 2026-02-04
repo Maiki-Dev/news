@@ -14,10 +14,21 @@ interface SearchPageProps {
 
 export const dynamic = "force-dynamic";
 
-async function searchNews(query: string) {
+type SearchResult = {
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string | null;
+  createdAt: Date;
+  category: {
+    name: string;
+  };
+};
+
+async function searchNews(query: string): Promise<SearchResult[]> {
   if (!query) return [];
   
-  return await prisma.news.findMany({
+  return (await prisma.news.findMany({
     where: {
       published: true,
       OR: [
@@ -27,13 +38,13 @@ async function searchNews(query: string) {
     },
     orderBy: { createdAt: "desc" },
     include: { category: true },
-  });
+  })) as SearchResult[];
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = await searchParams;
   const query = q || "";
-  const results = await searchNews(query);
+  const results: SearchResult[] = await searchNews(query);
 
   return (
     <div className="space-y-8">
