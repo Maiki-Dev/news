@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
+import type { Prisma } from "@prisma/client";
 
 interface CategoryPageProps {
   params: Promise<{
@@ -19,6 +20,8 @@ async function getCategory(slug: string) {
     where: { slug },
   });
 }
+
+type NewsWithCategory = Prisma.NewsGetPayload<{ include: { category: true } }>;
 
 async function getNewsByCategory(categoryId: string) {
   return await prisma.news.findMany({
@@ -36,7 +39,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const newsList = await getNewsByCategory(category.id);
+  const newsList: NewsWithCategory[] = await getNewsByCategory(category.id);
 
   return (
     <div className="space-y-8">
