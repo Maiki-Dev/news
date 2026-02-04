@@ -7,6 +7,17 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 
 export const revalidate = 60; // Revalidate every minute
 
+type LatestNewsItem = {
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string | null;
+  createdAt: Date;
+  category: {
+    name: string;
+  };
+};
+
 async function getFeaturedNews() {
   return await prisma.news.findFirst({
     where: { published: true, coverImage: { not: null } },
@@ -15,8 +26,8 @@ async function getFeaturedNews() {
   });
 }
 
-async function getLatestNews(excludeId?: string) {
-  return await prisma.news.findMany({
+async function getLatestNews(excludeId?: string): Promise<LatestNewsItem[]> {
+  return (await prisma.news.findMany({
     where: { 
       published: true,
       id: excludeId ? { not: excludeId } : undefined 
@@ -24,12 +35,12 @@ async function getLatestNews(excludeId?: string) {
     orderBy: { createdAt: "desc" },
     take: 10,
     include: { category: true, author: true },
-  });
+  })) as LatestNewsItem[];
 }
 
 export default async function HomePage() {
   const featuredNews = await getFeaturedNews();
-  const latestNews = await getLatestNews(featuredNews?.id);
+  const latestNews: LatestNewsItem[] = await getLatestNews(featuredNews?.id);
 
   return (
     <div className="space-y-12">
